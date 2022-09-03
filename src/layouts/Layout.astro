@@ -1,13 +1,16 @@
 ---
-export interface Props {
-	title: string;
-}
+import locale from '../locale'
 
-const { title } = Astro.props;
+const { title, lang } = Astro.props;
+
+const languageSwitcher = Object.keys(locale).filter((l) => l !== lang).map((l) => {
+	return `<a href="/${l}${Astro.url.pathname.slice(3)}">${locale[l].lang[l]}</a>`;
+}).join(' | ');
+
 ---
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang={lang}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width" />
@@ -16,6 +19,11 @@ const { title } = Astro.props;
 		<title>{title}</title>
 	</head>
 	<body>
+		<nav>
+			<a href={`/${lang}`}>{locale[lang].nav.home}</a>
+			<a href={`/${lang}/about`}>{locale[lang].nav.about}</a>
+			<div set:html={languageSwitcher} />
+		</nav>
 		<slot />
 	</body>
 </html>
@@ -35,6 +43,16 @@ const { title } = Astro.props;
 		font-size: var(--font-size-base);
 		color: var(--color-text);
 		background-color: var(--color-bg);
+	}
+
+	nav {
+		margin: 0 auto;
+		max-width: 60ch;
+		padding: 2em;
+		display: flex;
+		justify-content: space-around;
+	}
+	nav a {
 	}
 
 	body {

@@ -3,35 +3,23 @@ import Layout from '../../layouts/Layout.astro';
 import locale from '../../locale'
 
 export async function getStaticPaths() {
-const pages = [
-{
-lang: "en",
-title: "English",
-text: "Hello World",
-},
-{
-lang: "ua",
-title: "Українська",
-text: "Привіт, світ!",
-},
-];
-return pages.map(({ lang, title, text }) => {
-return {
-params: { lang },
-props: { title, text, lang },
-};
-});
+    const langs = Object.keys(locale);
+    return langs.map((lang) => {
+        return {
+            params: { lang },
+            props: { lang },
+        };
+    });
 }
 
-const { text, title, lang } = Astro.props;
+const { lang } = Astro.props;
 
 ---
 
-<Layout lang={lang} title={title}>
+<Layout lang={lang} title={locale[lang].about.title}>
     <main>
-        <h1><span class="text-gradient">{locale[lang].home.title}</span></h1>
-        <p class="instructions">{title}</p>
-        <p class="instructions">{locale[lang].home.description}</p>
+        <h1><span class="text-gradient">{locale[lang].about.title}</span></h1>
+        <p class="instructions">{locale[lang].about.text}</p>
     </main>
 </Layout>
 
@@ -87,10 +75,4 @@ const { text, title, lang } = Astro.props;
     padding: 0.15em 0.25em;
   }
 
-  .link-card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(24ch, 1fr));
-    gap: 1rem;
-    padding: 0;
-  }
 </style>
